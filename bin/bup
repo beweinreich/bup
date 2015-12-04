@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# TODO: Switch this over to commander: https://github.com/commander-rb/commander
+
 require 'yaml'
 require 'find'
 
@@ -14,20 +16,6 @@ command = ARGV[1]
 host = bupfile[environment]
 app_name = bupfile["app_name"]
 user_name = bupfile["user_name"] || "ubuntu"
-
-# private_key = bupfile["private_key"]
-# private_key = ""
-
-# Dir.glob("#{Dir.home}/.ssh/*").each do |key|
-#   puts key
-#   # key_path = "#{Dir.home}/.ssh/#{key}"
-#   system "ssh -i #{key} -q ubuntu@#{host} exit"
-#   connected = system "echo $?"
-#   if connected != 255
-#     private_key = key
-#     break
-#   end  
-# end
 
 if environment == "vagrant"
   vagrant_directory = ""
