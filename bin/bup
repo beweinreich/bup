@@ -3,7 +3,12 @@
 require 'yaml'
 require 'find'
 
-bupfile = YAML.load_file('Bup')
+begin
+  bupfile = YAML.load_file('Bup')
+rescue
+  puts "No Bup file found!"
+  abort()
+end
 environment = ARGV[0]
 command = ARGV[1]
 host = bupfile[environment]

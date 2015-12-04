@@ -1,0 +1,38 @@
+startup_files() {
+  case $(basename $usershell) in
+    zsh)
+      echo ".zlogin .zshrc .zprofile .zshenv"
+      ;;
+    bash)
+      echo ".bashrc .bash_profile .bash_login .profile"
+      ;;
+    *)
+      echo ".bash_profile .zshrc .profile"
+      ;;
+  esac
+}
+
+export_path() {
+  for file in $(startup_files); do
+    [ -f $HOME/$file ] || continue
+    (grep "Added by Bup" $HOME/$file >/dev/null) && break
+
+    cat <<MESSAGE >>$HOME/$file
+
+### Added by the Bup
+export PATH="/usr/local/bup/bin:\$PATH"
+MESSAGE
+
+    break
+  done
+}
+
+pushd .
+sudo cp -r ./ /usr/local/bup
+cd /usr/local/bup
+bundle install
+popd
+usershell=$SHELL
+export_path
+
+echo "You installed Bup!"
