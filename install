@@ -19,7 +19,7 @@ export_path() {
 
     cat <<MESSAGE >>$HOME/$file
 
-### Added by the Bup
+### Added by Bup
 export PATH="/usr/local/bup/bin:\$PATH"
 MESSAGE
     
