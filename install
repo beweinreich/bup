@@ -22,7 +22,8 @@ export_path() {
 ### Added by the Bup
 export PATH="/usr/local/bup/bin:\$PATH"
 MESSAGE
-
+    
+    source $HOME/$file
     break
   done
 }
@@ -33,6 +34,6 @@ cd /usr/local/bup
 bundle install
 popd
 usershell=$SHELL
-export_path
+export_path 
 
-echo "You installed Bup!"
+echo "Bup was successfully installed!"
