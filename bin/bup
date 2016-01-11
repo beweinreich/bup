@@ -16,6 +16,7 @@ command = ARGV[1]
 host = bupfile[environment]
 app_name = bupfile["app_name"]
 user_name = bupfile["user_name"] || "ubuntu"
+identity_file = bupfile["identity_file"]
 
 if environment == "vagrant"
   vagrant_directory = ""
@@ -30,15 +31,17 @@ if environment == "vagrant"
   command = command || "ssh"
   exec "pushd .; cd #{vagrant_directory}/../; vagrant #{command}; popd"
 elsif command == "console"
-  exec "ssh #{user_name}@#{host} -t 'bash -l -c \"cd /#{app_name}/current; rails c; bash\"'"
+  exec "ssh #{user_name}@#{host} -i #{identity_file} -t 'bash -l -c \"cd /#{app_name}/current; rails c; bash\"'"
 elsif command == "update"
   exec "sh railsbox/#{environment}/update.sh"
 elsif command == "logs"
-  exec "ssh #{user_name}@#{host} -t 'bash -l -c \"tail -f /#{app_name}/shared/log/puma.#{environment}.log\"'"
+  exec "ssh #{user_name}@#{host} -i #{identity_file} -t 'bash -l -c \"tail -f /var/log/puma/puma.log\"'"
+elsif command == "es-logs"
+  exec "ssh #{user_name}@#{host} -i #{identity_file} -t 'bash -l -c \"tail -f /var/log/elasticsearch/elasticsearch.log\"'"
 elsif command == "restart"
-  exec "ssh #{user_name}@#{host} sudo restart #{app_name}"
+  exec "ssh #{user_name}@#{host} -i #{identity_file} sudo supervisorctl reload"
 elsif command == "reindex"
-  exec "ssh #{user_name}@#{host} -t 'bash -l -c \"cd /#{app_name}/current; rake searchkick:reindex:all\"'"
+  exec "ssh #{user_name}@#{host} -i #{identity_file} -t 'bash -l -c \"cd /#{app_name}/current; rake searchkick:reindex:all\"'"
 else
-  exec "ssh #{user_name}@#{host}"
+  exec "ssh #{user_name}@#{host} -i #{identity_file}"
 end
